@@ -2,7 +2,8 @@ Lightweight development server to proxy PayPal API's.  Mostly useful for buildin
 
 ## Installation
 ```
-git clone
+git clone https://github.com/trainerbill/paypal-proxy-server.git
+cd paypal-proxy-server
 npm install
 ```
 
@@ -19,6 +20,7 @@ PORT=8080
 npm run start:dev
 ```
 
+# Test
 ```
 curl -H "Content-Type: application/json" http://localhost:8080/rest/v2/checkout/orders --data '{"intent":"CAPTURE","purchase_units":[{"amount":{"currency_code":"USD","value":"100.00"}}]}' 
 ```
