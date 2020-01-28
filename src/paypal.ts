@@ -103,6 +103,8 @@ export async function verifyWebhookSignature(token: IPayPalAccessToken, webhook_
         webhook_event
     };
 
+    logger.verbose(payload);
+
     const options = {
         method: 'POST',
         headers: {
