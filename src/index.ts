@@ -60,7 +60,7 @@ if (process.env.PAYPAL_WEBHOOK_LISTENER) {
     setupWebhookListener().then(hook => webhook = hook);
 
     app.post('/rest/webhooks/listen', accessTokenMiddleware, async (req, res) => {
-        logger.info(req.body);
+        logger.info(req.headers);
         if (process.env.PAYPAL_WEBHOOK_VERIFY) {
             const response = await verifyWebhookSignature(req.accessToken, webhook.id, req.headers, req.body);
             if (response.verification_status === 'SUCCESS') {
