@@ -63,11 +63,7 @@ if (process.env.PAYPAL_WEBHOOK_LISTENER) {
         logger.info(req.headers);
         if (process.env.PAYPAL_WEBHOOK_VERIFY) {
             const response = await verifyWebhookSignature(req.accessToken, webhook.id, req.headers, req.body);
-            if (response.verification_status === 'SUCCESS') {
-                logger.info(`Webhook Valid!`);
-            } else {
-                logger.info(`Webhook Invalid!`);
-            }
+            logger.info(response);
         }
         res.status(200).send();
     });
