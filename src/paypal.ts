@@ -91,6 +91,32 @@ export async function deleteWebhook(token: IPayPalAccessToken, id: string) {
     );
 }
 
+export async function verifyWebhookSignature(token: IPayPalAccessToken, webhook_id: string, headers: any, webhook_event: any) {
+
+    const options = {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token.access_token}`,
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            transmission_id: headers['PAYPAL-TRANSMISSION-ID'],
+            transmission_time: headers['PAYPAL-TRANSMISSION-TIME'],
+            cert_url: headers['PAYPAL-CERT-URL'],
+            auth_algo: headers['PAYPAL-AUTH-ALGO'],
+            transmission_sig: headers['PAYPAL-TRANSMISSION-SIG'],
+            webhook_id,
+            webhook_event
+        }),
+    }
+    const response = await fetch(
+        `${getHostname()}/v1/notifications/verify-webhook-signature`,
+        options
+    );
+
+    return await response.json();
+}
+
 export async function setupWebhookListener() {
 
     const url = `${process.env.HOSTNAME}/rest/webhooks/listen`;
@@ -117,4 +143,5 @@ export async function setupWebhookListener() {
     // Create hook
     const newhook = await createWebhookListener(token, url, events);
     logger.info(`Webhook Listener ${newhook.id} created on ${newhook.url}`);
+    return newhook;
 }
