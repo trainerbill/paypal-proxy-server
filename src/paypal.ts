@@ -94,11 +94,11 @@ export async function deleteWebhook(token: IPayPalAccessToken, id: string) {
 export async function verifyWebhookSignature(token: IPayPalAccessToken, webhook_id: string, headers: any, webhook_event: any) {
 
     const payload = {
-        transmission_id: headers['PAYPAL-TRANSMISSION-ID'],
-        transmission_time: headers['PAYPAL-TRANSMISSION-TIME'],
-        cert_url: headers['PAYPAL-CERT-URL'],
-        auth_algo: headers['PAYPAL-AUTH-ALGO'],
-        transmission_sig: headers['PAYPAL-TRANSMISSION-SIG'],
+        transmission_id: headers['paypal-transmission-id'],
+        transmission_time: headers['paypal-transmission-time'],
+        cert_url: headers['paypal-cert-url'],
+        auth_algo: headers['paypal-auth-algo'],
+        transmission_sig: headers['paypal-transmission-sig'],
         webhook_id,
         webhook_event
     };
