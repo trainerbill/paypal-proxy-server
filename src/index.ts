@@ -1,7 +1,7 @@
 import express, { Request, Response } from 'express';
 import fetch from 'node-fetch';
 import btoa from 'btoa';
-import { createAccessToken } from './paypal';
+import { createAccessToken, listWebhooks, setupWebhookListener } from './paypal';
 import { IPayPalAccessToken, CustomRequest } from './interfaces';
 import { accessTokenMiddleware } from "./middleware";
 import bodyParser from 'body-parser';
@@ -52,9 +52,20 @@ app.post('/rest/v2/checkout/orders', accessTokenMiddleware, async (req, res) => 
     res.json(await response.json());
 });
 
-app.get('/rest/webhooks', accessTokenMiddleware, async (req, res) => {
+if (process.env.PAYPAL_WEBHOOK_LISTENER) {
 
-    res.json({ test: 'I am Webhooks' });
-});
+    setupWebhookListener();
+
+    app.post('/rest/webhooks/listen', accessTokenMiddleware, async (req, res) => {
+
+
+
+
+
+        res.json({ test: 'I am Webhooks' });
+    });
+}
+
+
 
 app.listen(port, () => console.log(`paypal-proxy-server app listening on port ${port}!`))
