@@ -2,6 +2,7 @@ import btoa from 'btoa';
 import fetch from 'node-fetch';
 import { getHostname } from './helpers';
 import { IPayPalAccessToken } from './interfaces';
+import { logger } from './logger';
 
 export async function createAccessToken() {
     const bearer = btoa(`${process.env.PAYPAL_CLIENT_ID}:${process.env.PAYPAL_CLIENT_SECRET}`);
@@ -94,7 +95,7 @@ export async function setupWebhookListener() {
 
     const url = `${process.env.HOSTNAME}/rest/webhooks/listen`;
 
-    console.log(`Setting up webhook listener on ${url}`);
+    logger.info(`Setting up webhook listener on ${url}`);
 
     const token = await createAccessToken();
 
@@ -115,5 +116,5 @@ export async function setupWebhookListener() {
     }
     // Create hook
     const newhook = await createWebhookListener(token, url, events);
-    console.log(`Webhook Listener ${newhook.id} created on ${newhook.url}`);
+    logger.info(`Webhook Listener ${newhook.id} created on ${newhook.url}`);
 }
