@@ -7,6 +7,8 @@ import { accessTokenMiddleware } from "./middleware";
 import bodyParser from 'body-parser';
 import { getHostname } from './helpers';
 import cors from 'cors';
+import { logger } from './logger';
+import { createLogger } from 'winston';
 
 const port = process.env.PORT || 8080;
 
@@ -57,12 +59,8 @@ if (process.env.PAYPAL_WEBHOOK_LISTENER) {
     setupWebhookListener();
 
     app.post('/rest/webhooks/listen', accessTokenMiddleware, async (req, res) => {
-
-
-
-
-
-        res.json({ test: 'I am Webhooks' });
+        logger.info(req.body);
+        res.status(200).send();
     });
 }
 
