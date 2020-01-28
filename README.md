@@ -29,8 +29,8 @@ Its easiest to deploy this to heroku if you want to use the webhook listener
 
 ```
 PAYPAL_WEBHOOK_LISTENER=true
-PAYPAL_WEBHOOK_VERIFY=true
-HOSTNAME=https://paypal-proxy-server.herokuapp.com
+PAYPAL_WEBHOOK_VERIFY=true 
+HOSTNAME=YOUR_HEROKU_URL
 ```
 
 # Test
