@@ -52,4 +52,9 @@ app.post('/rest/v2/checkout/orders', accessTokenMiddleware, async (req, res) => 
     res.json(await response.json());
 });
 
+app.get('/rest/webhooks', accessTokenMiddleware, async (req, res) => {
+
+    res.json({ test: 'I am Webhooks' });
+});
+
 app.listen(port, () => console.log(`paypal-proxy-server app listening on port ${port}!`))
