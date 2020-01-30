@@ -3,7 +3,8 @@
     "lib": [
       "es2017",
       "esnext.asynciterable",
-      "es2017.object"
+      "es2017.object",
+      "DOM"
     ],
     "module": "commonjs",
     "moduleResolution": "node",
