@@ -60,11 +60,11 @@ app.post(
 );
 
 app.post(
-  "/rest/v2/checkout/orders/:id/authorize",
+  "/rest/v2/checkout/orders/:id/capture",
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await Orders.authorize(
+    const response = await Orders.capture(
       req.paypalAccessToken,
       req.params.id,
       req.body
