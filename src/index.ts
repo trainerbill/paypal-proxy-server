@@ -74,6 +74,20 @@ app.post(
 );
 
 app.post(
+  "/rest/v2/payments/authorizations/:id/capture",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Payments.capture(
+      req.paypalAccessToken,
+      req.params.id,
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
+app.post(
   "/rest/v1/billing-agreements/agreement-tokens",
   Middleware.accessTokenMiddleware,
   async (req, res) => {
