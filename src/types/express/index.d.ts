@@ -1,10 +1,10 @@
 import { Request } from "express";
-import { IPayPalAccessToken } from "../../interfaces";
+import { Oauth } from "paypal-isomorphic-functions";
 
 declare global {
   namespace Express {
     export interface Request {
-      accessToken: IPayPalAccessToken;
+      paypalAccessToken: Oauth.IPayPalAccessToken;
     }
   }
 }

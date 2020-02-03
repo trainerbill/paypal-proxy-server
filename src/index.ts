@@ -1,16 +1,15 @@
 import express from "express";
-import { accessTokenMiddleware } from "./middleware";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { logger } from "./logger";
 
 import {
-  createOrder,
-  createAccessToken,
-  verifyWebhookSignature,
-  createBillingAgreement,
-  createBillingAgreementToken,
-  createPayment
+  Orders,
+  Oauth,
+  Payments,
+  BillingAgreements,
+  Webhooks,
+  Middleware,
 } from 'paypal-isomorphic-functions';
 import { setupWebhookListener } from "./paypal";
 
@@ -22,46 +21,46 @@ app.use(bodyParser.json());
 app.use(cors());
 
 app.post("/rest/v1/oauth2/token", async (req, res) => {
-  const response = await createAccessToken();
+  const response = await Oauth.createAccessToken();
   res.send(response);
 });
 
 app.post(
   "/rest/v1/payments/payment",
-  accessTokenMiddleware,
+  Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await createPayment(req.accessToken, req.body);
+    const response = await Payments.create(req.paypalAccessToken, req.body);
     res.json(await response.json());
   }
 );
 
 app.post(
   "/rest/v2/checkout/orders",
-  accessTokenMiddleware,
+  Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await createOrder(req.accessToken, req.body);
+    const response = await Orders.create(req.paypalAccessToken, req.body);
     res.json(await response.json());
   }
 );
 
 app.post(
   "/rest/v1/billing-agreements/agreement-tokens",
-  accessTokenMiddleware,
+  Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await createBillingAgreementToken(req.accessToken, req.body);
+    const response = await BillingAgreements.createToken(req.paypalAccessToken, req.body);
     res.json(await response.json());
   }
 );
 
 app.post(
   "/rest/v1/billing-agreements/agreements",
-  accessTokenMiddleware,
+  Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await createBillingAgreement(req.accessToken, req.body.token_id);
+    const response = await BillingAgreements.create(req.paypalAccessToken, req.body.token_id);
     res.json(await response.json());
   }
 );
@@ -69,10 +68,10 @@ app.post(
 if (process.env.PAYPAL_WEBHOOK_LISTENER) {
   setupWebhookListener().then(hook => (webhook = hook));
 
-  app.post("/rest/webhooks/listen", accessTokenMiddleware, async (req, res) => {
+  app.post("/rest/webhooks/listen", Middleware.accessTokenMiddleware, async (req, res) => {
     if (process.env.PAYPAL_WEBHOOK_VERIFY) {
-      const response = await verifyWebhookSignature(
-        req.accessToken,
+      const response = await Webhooks.verify(
+        req.paypalAccessToken,
         webhook.id,
         req.headers,
         req.body

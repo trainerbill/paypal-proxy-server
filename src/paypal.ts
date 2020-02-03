@@ -1,10 +1,7 @@
 import { logger } from "./logger";
 import {
-  createAccessToken,
-  listWebhookEventTypes,
-  listWebhooks,
-  deleteWebhook,
-  createWebhookListener
+  Oauth,
+  Webhooks
 } from 'paypal-isomorphic-functions';
 
 export async function setupWebhookListener() {
@@ -12,12 +9,12 @@ export async function setupWebhookListener() {
 
   logger.info(`Setting up webhook listener on ${url}`);
 
-  const token = await createAccessToken();
+  const token = await Oauth.createAccessToken();
 
   // List current webhooks for account
   const response = await Promise.all([
-    listWebhooks(token),
-    listWebhookEventTypes(token)
+    Webhooks.list(token),
+    Webhooks.listEventTypes(token)
   ]);
 
   const hooks = await response[0].json();
@@ -30,10 +27,10 @@ export async function setupWebhookListener() {
 
   if (hook) {
     // Remove hook
-    await deleteWebhook(token, hook.id);
+    await Webhooks.remove(token, hook.id);
   }
   // Create hook
-  const res = await createWebhookListener(token, url, mappedEvents);
+  const res = await Webhooks.create(token, url, mappedEvents);
   const newhook = await res.json();
   logger.info(`Webhook Listener ${newhook.id} created on ${newhook.url}`);
   return newhook;
