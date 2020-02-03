@@ -1,8 +1,5 @@
 import { logger } from "./logger";
-import {
-  Oauth,
-  Webhooks
-} from 'paypal-isomorphic-functions';
+import { Oauth, Webhooks } from "paypal-isomorphic-functions";
 
 export async function setupWebhookListener() {
   const url = `${process.env.HOSTNAME}/rest/webhooks/listen`;

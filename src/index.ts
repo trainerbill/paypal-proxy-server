@@ -9,8 +9,8 @@ import {
   Payments,
   BillingAgreements,
   Webhooks,
-  Middleware,
-} from 'paypal-isomorphic-functions';
+  Middleware
+} from "paypal-isomorphic-functions";
 import { setupWebhookListener } from "./paypal";
 
 let webhook: any;
@@ -46,11 +46,42 @@ app.post(
 );
 
 app.post(
+  "/rest/v2/checkout/orders/:id/authorize",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Orders.authorize(
+      req.paypalAccessToken,
+      req.params.id,
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
+app.post(
+  "/rest/v2/checkout/orders/:id/authorize",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Orders.authorize(
+      req.paypalAccessToken,
+      req.params.id,
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
+app.post(
   "/rest/v1/billing-agreements/agreement-tokens",
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await BillingAgreements.createToken(req.paypalAccessToken, req.body);
+    const response = await BillingAgreements.createToken(
+      req.paypalAccessToken,
+      req.body
+    );
     res.json(await response.json());
   }
 );
@@ -60,7 +91,10 @@ app.post(
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await BillingAgreements.create(req.paypalAccessToken, req.body.token_id);
+    const response = await BillingAgreements.create(
+      req.paypalAccessToken,
+      req.body.token_id
+    );
     res.json(await response.json());
   }
 );
@@ -68,23 +102,25 @@ app.post(
 if (process.env.PAYPAL_WEBHOOK_LISTENER) {
   setupWebhookListener().then(hook => (webhook = hook));
 
-  app.post("/rest/webhooks/listen", Middleware.accessTokenMiddleware, async (req, res) => {
-    if (process.env.PAYPAL_WEBHOOK_VERIFY) {
-      const response = await Webhooks.verify(
-        req.paypalAccessToken,
-        webhook.id,
-        req.headers,
-        req.body
-      );
-      logger.info(await response.json());
+  app.post(
+    "/rest/webhooks/listen",
+    Middleware.accessTokenMiddleware,
+    async (req, res) => {
+      if (process.env.PAYPAL_WEBHOOK_VERIFY) {
+        const response = await Webhooks.verify(
+          req.paypalAccessToken,
+          webhook.id,
+          req.headers,
+          req.body
+        );
+        logger.info(await response.json());
+      }
+      logger.info(req.body);
+      res.status(200).send();
     }
-    logger.info(req.body);
-    res.status(200).send();
-  });
+  );
 }
 
 app.listen(port, () =>
   console.log(`paypal-proxy-server app listening on port ${port}!`)
 );
-
-
