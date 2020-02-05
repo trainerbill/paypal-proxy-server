@@ -81,6 +81,22 @@ app.post(
     const response = await Payments.capture(
       req.paypalAccessToken,
       req.params.id,
+      "v2",
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
+app.post(
+  "/rest/v1/payments/authorizations/:id/capture",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Payments.capture(
+      req.paypalAccessToken,
+      req.params.id,
+      "v1",
       req.body
     );
     res.json(await response.json());

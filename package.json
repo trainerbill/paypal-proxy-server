@@ -32,7 +32,7 @@
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "node-fetch": "^2.6.0",
-    "paypal-isomorphic-functions": "^1.0.13",
+    "paypal-isomorphic-functions": "^1.0.14",
     "ts-node": "^8.6.2",
     "winston": "^3.2.1"
   }
