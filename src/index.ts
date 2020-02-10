@@ -73,6 +73,20 @@ app.post(
   }
 );
 
+app.patch(
+  "/rest/v2/checkout/orders/:id",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Orders.update(
+      req.paypalAccessToken,
+      req.params.id,
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
 app.post(
   "/rest/v2/payments/authorizations/:id/capture",
   Middleware.accessTokenMiddleware,
