@@ -15,7 +15,7 @@ PAYPAL_ENVIRONMENT=sandbox
 PORT=8080
 ```
 
-## Usage
+## Usagea
 ```
 npm run start:dev
 ```
