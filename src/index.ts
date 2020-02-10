@@ -30,7 +30,7 @@ app.post(
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await Payments.create(req.paypalAccessToken, req.body);
+    const response = await Payments.v1.create(req.paypalAccessToken, req.body);
     res.json(await response.json());
   }
 );
