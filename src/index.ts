@@ -92,10 +92,23 @@ app.post(
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await Payments.capture(
+    const response = await Payments.v2.capture(
       req.paypalAccessToken,
       req.params.id,
-      "v2",
+      req.body
+    );
+    res.json(await response.json());
+  }
+);
+
+app.patch(
+  "/rest/v1/payments/payment/:id",
+  Middleware.accessTokenMiddleware,
+  async (req, res) => {
+    logger.verbose(`Body: ${req.body}`);
+    const response = await Payments.v1.update(
+      req.paypalAccessToken,
+      req.params.id,
       req.body
     );
     res.json(await response.json());
@@ -107,7 +120,7 @@ app.post(
   Middleware.accessTokenMiddleware,
   async (req, res) => {
     logger.verbose(`Body: ${req.body}`);
-    const response = await Payments.capture(
+    const response = await Payments.v1.capture(
       req.paypalAccessToken,
       req.params.id,
       "v1",
